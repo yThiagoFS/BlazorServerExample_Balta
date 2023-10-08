@@ -1,0 +1,14 @@
+﻿<Router AppAssembly="@typeof(App).Assembly">
+    <!--Passa os dados da rota para o context-->
+    <Found Context="routeData">
+    <!--Passa os dados da rota para o RouteData e tenta buscar/renderizar o componente especificado em DefaultLayout-->
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+    </Found>
+    <NotFound>
+        <PageTitle>Not found</PageTitle>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <p role="alert">Sorry, there's nothing at this address.</p>
+        </LayoutView>
+    </NotFound>
+</Router>
