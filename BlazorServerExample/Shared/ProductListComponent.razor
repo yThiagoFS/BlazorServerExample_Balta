@@ -1,0 +1,43 @@
+@if(!_products.Any())
+{
+    <h3>Loading your products...</h3>
+}
+else
+{
+     <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Price</th>
+                <th scope="col">Category ID</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        @foreach(var product in _products) 
+        {
+            <tr>
+                <td>@product.Id</td>
+                <td>@product.Name</td>
+                <td>@product.Description</td>
+                <td>@product.Price.ToString("00.00")</td>
+                <td>@product.CategoryId</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code  
+{
+    private List<Product> _products = new();
+
+    protected override async Task OnInitializedAsync() 
+    {
+        await Task.Delay(3000);
+        for(int counter = 1; counter <= 10; counter++)
+            _products.Add(new Product((long)counter, $"Product {counter}", "Some Description", "Some image", (counter * 7.45M), 1));
+    }
+}
