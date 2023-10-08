@@ -21,14 +21,15 @@
         <InputNumber class="form-control" @bind-Value="_product!.Price" id="Price"/>
     </div>
 
-    <InputSelect class="form-select" @bind-Value="_product!.CategoryId">
+    <label for="CategoryId">Category ID</label>
+    <InputSelect id="CategoryId" class="form-select mb-3" @bind-Value="_product!.CategoryId">
         @foreach(var category in _categories)
         {
             <option value="@category.Id">@category.Name</option>
         }
     </InputSelect>
 
-    <button type="submit">Submit</button>
+    <button class="btn btn-success" type="submit">Submit</button>
 </EditForm>
 
 @code
@@ -37,12 +38,16 @@
 
     List<Category> _categories = new();
 
-    protected override async Task OnInitializedAsync() => _categories = await _context.Categories.ToListAsync();
+    protected override async Task OnInitializedAsync() 
+    {
+         _categories = await _context.Categories.AsNoTracking().ToListAsync();
+         _product.CategoryId = _categories.First().Id;
+    }
 
     async Task HandleSubmitAsync()
     {
-        _context.Products.Add(_product);
-        _context.SaveChangesAsync();
+        await _context.Products.AddAsync(_product);
+        await _context.SaveChangesAsync();
         NavManager.NavigateTo("/products");
     }
 }
