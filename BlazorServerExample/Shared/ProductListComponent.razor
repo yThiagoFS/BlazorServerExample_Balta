@@ -16,7 +16,7 @@ else
         </thead>
         <tbody>
 
-        @foreach(var product in _products) 
+        @foreach(var product in _products.Take(Take)) 
         {
             <tr>
                 <td>@product.Id</td>
@@ -32,12 +32,18 @@ else
 
 @code  
 {
+    [Parameter]
+    public int Skip { get; set; } = 0;
+
+    [Parameter]
+    public int Take { get; set; } = 25;
+
     private List<Product> _products = new();
 
     protected override async Task OnInitializedAsync() 
     {
         await Task.Delay(3000);
-        for(int counter = 1; counter <= 10; counter++)
+        for(int counter = 1; counter <= 200; counter++)
             _products.Add(new Product((long)counter, $"Product {counter}", "Some Description", "Some image", (counter * 7.45M), 1));
     }
 }
