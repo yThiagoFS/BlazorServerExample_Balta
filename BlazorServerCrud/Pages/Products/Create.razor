@@ -1,5 +1,7 @@
 @page "/products/create"
+@using Microsoft.EntityFrameworkCore
 @inject BlazorServerCrud.Data.AppDbContext _context
+@inject NavigationManager NavManager
 
 <PageTitle>Create Product</PageTitle>
 
@@ -15,14 +17,16 @@
     </div>
 
     <div class="mb-3">
-        <label for="Description" class="form-label">Description</label>
-        <InputText class="form-control" type="text" @bind-Value="_product!.Description" id="Description"/>
+        <label for="Price" class="form-label">Price</label>
+        <InputNumber class="form-control" @bind-Value="_product!.Price" id="Price"/>
     </div>
 
-    <div class="mb-3">
-        <label for="Price" class="form-label">Price</label>
-        <InputText class="form-control" type="text" @bind-Value="_product!.Price" id="Price"/>
-    </div>
+    <InputSelect class="form-select" @bind-Value="_product!.CategoryId">
+        @foreach(var category in _categories)
+        {
+            <option value="@category.Id">@category.Name</option>
+        }
+    </InputSelect>
 
     <button type="submit">Submit</button>
 </EditForm>
@@ -31,14 +35,14 @@
 {
     Product _product = new();
 
-    protected override async Task OnInitializedAsync() 
-    {
+    List<Category> _categories = new();
 
-    }
+    protected override async Task OnInitializedAsync() => _categories = await _context.Categories.ToListAsync();
 
     async Task HandleSubmitAsync()
     {
         _context.Products.Add(_product);
         _context.SaveChangesAsync();
+        NavManager.NavigateTo("/products");
     }
 }
