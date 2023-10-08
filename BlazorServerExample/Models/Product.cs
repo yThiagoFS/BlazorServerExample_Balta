@@ -2,10 +2,9 @@ namespace BlazorServerExample.Models;
 
 public class Product 
 {
-
     public Product(){}
 
-    public Product(id, name, description, image, price, categoryId)
+    public Product(long id, string name, string description, string image, decimal price, long categoryId)
     {
         Id = id;
         Name = name;

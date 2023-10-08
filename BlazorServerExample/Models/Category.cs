@@ -17,5 +17,5 @@ public class Category
 
     public string Description { get; } = string.Empty;
 
-    public List<Product> Products() { get; set; } = new();
+    public List<Product> Products { get; set; } = new();
 }
