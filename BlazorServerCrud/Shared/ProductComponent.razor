@@ -1,0 +1,51 @@
+﻿@inherits LayoutComponentBase
+
+<EditForm Model="@_product" OnSubmit="HandleSubmitAsync">
+    <div class="mb-3">
+        <label for="Name" class="form-label">Name</label>
+        <InputText class="form-control" type="text" @bind-Value="_product!.Name" id="Name" />
+    </div>
+
+    <div class="mb-3">
+        <label for="Price" class="form-label">Price</label>
+        <InputNumber class="form-control" @bind-Value="_product!.Price" id="Price" />
+    </div>
+
+    <label for="CategoryId">Category ID</label>
+    <InputSelect id="CategoryId" class="form-select mb-3" @bind-Value="_product!.CategoryId">
+        @foreach (var category in _categories)
+        {
+            <option value="@category.Id">@category.Name</option>
+        }
+    </InputSelect>
+
+    <button class="btn btn-success" type="submit">Submit</button>
+</EditForm>
+
+@code {
+
+    [Parameter] 
+    public Action<Product>? SubmitMethod { get; set; }
+
+    [Parameter]
+    public Func<Product?>? LoadProduct { get; set; }
+
+    [Parameter]
+    public Func<List<Category>?>? LoadCategories { get; set; }
+
+    [Parameter]
+    public string? BodyComponent { get; set; } = string.Empty;
+
+    Product _product { get; set; }
+
+    List<Category> _categories { get; set; }
+
+    protected override void OnInitialized()
+    {
+        _product = LoadProduct?.Invoke() ?? new();
+        _categories = LoadCategories?.Invoke() ?? new();
+    }
+
+    void HandleSubmitAsync()
+        => SubmitMethod?.Invoke(_product);
+}

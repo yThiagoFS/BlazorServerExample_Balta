@@ -6,6 +6,8 @@
 
 <h1>List of the products</h1>
 
+<a href="products/create" class="btn btn-primary">Create a new Product</a>
+
 @if(_products.Any())
 {
  <table class="table">
@@ -26,6 +28,8 @@
                 <td>@product.Name</td>
                 <td>@product.Price.ToString("00.00")</td>
                 <td>@product.CategoryId</td>
+                <td><a href="/products/edit/@product.Id">Edit</a></td>
+                <td><a href="/products/delete/@product.Id">Delete</a></td>
             </tr>
         }
         </tbody>

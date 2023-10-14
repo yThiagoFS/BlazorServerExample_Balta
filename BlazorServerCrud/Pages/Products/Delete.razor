@@ -1,0 +1,54 @@
+﻿@page "/products/delete/{id:int}"
+@using Microsoft.EntityFrameworkCore
+@inject BlazorServerCrud.Data.AppDbContext _context
+@inject NavigationManager NavManager
+
+<h3>Delete</h3>
+
+<div>
+    @if(_product?.Id > 0)
+    {
+        <h3 class="text-danger">Are you sure that you want to delete the following product?</h3>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Category</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@_product.Id</td>
+                    <td>@_product.Name</td>
+                    <td>@_product.Price.ToString("00.00")</td>
+                    <td>@_product.CategoryId</td>
+                </tr>
+            </tbody>
+        </table>
+        <button class="btn btn-danger" onclick="@DeleteProduct">Delete Product</button>
+    }
+    else
+    {
+        <h3 class="text-danger">Product not found!</h3>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    Product _product;
+
+    protected override async Task OnInitializedAsync()
+        => _product = _context.Products.SingleOrDefault(prod => prod.Id == Id) ?? new();
+
+    void DeleteProduct()
+    {
+        _context.Products.Remove(_product);
+        _context.SaveChangesAsync();
+        NavManager.NavigateTo("/products");
+    }
+}

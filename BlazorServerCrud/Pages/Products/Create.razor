@@ -7,47 +7,19 @@
 
 <h1>New Product</h1>
 
-<EditForm Model="@_product" OnSubmit="HandleSubmitAsync">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-
-    <div class="mb-3">
-        <label for="Name" class="form-label">Name</label>
-        <InputText class="form-control" type="text" @bind-Value="_product!.Name" id="Name"/>
-    </div>
-
-    <div class="mb-3">
-        <label for="Price" class="form-label">Price</label>
-        <InputNumber class="form-control" @bind-Value="_product!.Price" id="Price"/>
-    </div>
-
-    <label for="CategoryId">Category ID</label>
-    <InputSelect id="CategoryId" class="form-select mb-3" @bind-Value="_product!.CategoryId">
-        @foreach(var category in _categories)
-        {
-            <option value="@category.Id">@category.Name</option>
-        }
-    </InputSelect>
-
-    <button class="btn btn-success" type="submit">Submit</button>
-</EditForm>
+<ProductComponent SubmitMethod="HandleSubmit" LoadCategories="GetCategories">
+ 
+</ProductComponent>
 
 @code
 {
-    Product _product = new();
+    private Product GetProduct() => new Product { CategoryId = 1 };
+    private List<Category> GetCategories() => _context.Categories.AsNoTracking().ToList();
 
-    List<Category> _categories = new();
-
-    protected override async Task OnInitializedAsync() 
+    void HandleSubmit(Product _product)
     {
-         _categories = await _context.Categories.AsNoTracking().ToListAsync();
-         _product.CategoryId = _categories.First().Id;
-    }
-
-    async Task HandleSubmitAsync()
-    {
-        await _context.Products.AddAsync(_product);
-        await _context.SaveChangesAsync();
+        _context.Products.Add(_product);
+        _context.SaveChanges();
         NavManager.NavigateTo("/products");
     }
 }

@@ -33,4 +33,16 @@ public class Product
     public long CategoryId { get; set; }
 
     public Category Category { get; } = new();
+
+    //private Dictionary<string, string> ValidateFields()
+    //{
+    //    var errors = new Dictionary<string, string>();
+
+    //    foreach(var property in typeof(Product).GetProperties())
+    //    {
+    //        var errorMessages = property.GetCustomAttributes(false).GetType().GetProperties().Where(prop => prop.Name == "ErrorMessage");
+
+
+    //    }
+    //}
 }

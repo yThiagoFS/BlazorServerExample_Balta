@@ -1,0 +1,25 @@
+﻿@page "/products/edit/{id:int}"
+@using Microsoft.EntityFrameworkCore;
+@inject BlazorServerCrud.Data.AppDbContext _context
+@inject NavigationManager NavManager
+
+<h3>Edit</h3>
+
+<ProductComponent SubmitMethod="HandleSubmitAsync" LoadProduct="GetProduct" LoadCategories="GetCategories" />
+
+@code {
+
+    [Parameter]
+    public int Id { get; set; }
+
+    List<Category> GetCategories() => _context.Categories.ToList() ?? new ();
+
+    private Product GetProduct() => _context.Products.SingleOrDefault(p => p.Id == Id) ?? new();
+
+    void HandleSubmitAsync(Product _product)
+    {
+        _context.Products.Update(_product);
+        _context.SaveChanges();
+        NavManager.NavigateTo("/products");
+    }
+}
